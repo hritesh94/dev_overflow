@@ -4,7 +4,7 @@
 
 ## 🌐 Demo
 
-Here is a working live demo: https://dev-overflow-nextjs13-rakibtweets.vercel.app/
+Here is a working live demo: https://nextjs14-devoverflow.vercel.app/
 
 ## 📝 Description
 
@@ -43,7 +43,7 @@ If your project has a lot of features, list them here.
 1. Clone the Repository
 
 ```bash
-git clone https://github.com/rakibtweets/dev_overflow_nextjs13.git
+git clone 
 ```
 
 2. Install packages
