@@ -43,7 +43,7 @@ If your project has a lot of features, list them here.
 1. Clone the Repository
 
 ```bash
-git clone 
+git clone https://github.com/hritesh94/dev_overflow.git
 ```
 
 2. Install packages
