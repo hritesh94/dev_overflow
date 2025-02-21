@@ -102,10 +102,6 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 - [ ] Provide a simple and intuitive user interface for easy navigation.
 - [ ] Allow users to filter jobs based on job title, location, or company.
 
-## 📞 Contact Us
-
-[![Follow us on LinkedIn](https://img.shields.io/badge/LinkedIn-rakibofficial007-blue?style=flat&logo=linkedin&logoColor=b0c0c0&labelColor=363D44)](https://www.linkedin.com/in/rakibofficial007/)
-
 ## Project Page Screenshoots
 
 <details open>
