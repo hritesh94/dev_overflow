@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 // Define public routes (with wildcard matching for subpaths)
 const publicRoutes = [
@@ -7,12 +8,12 @@ const publicRoutes = [
   "/sign-up(.*)",
   "/api/webhook(.*)",
   "/api/rapidapi(.*)",
-  "/question/:id(.*)",
-  "/tags(.*)",
-  "/tags/:id(.*)",
-  "/profile/:id(.*)",
-  "/community(.*)",
-  "/jobs(.*)",
+  "/question(.*)", // Matches /question/123
+  "/tags",
+  "/tags/:id", // Matches /tags/456
+  "/profile(.*)", // Matches /profile/789
+  "/community",
+  "/jobs",
 ];
 
 // Define routes to be completely ignored by Clerk’s middleware (with wildcard matching)
@@ -28,10 +29,10 @@ const isIgnoredRoute = createRouteMatcher(ignoredRoutes);
 export default clerkMiddleware(async (auth, request) => {
   // Bypass authentication completely for ignored routes
   if (isIgnoredRoute(request)) {
-    return;
+    return NextResponse.next(); // Allow request to continue without Clerk
   }
 
-  // For routes not listed as public, enforce authentication
+  // Enforce authentication on non-public routes
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
