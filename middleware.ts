@@ -3,7 +3,9 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // Define public routes (with wildcard matching for subpaths)
 const publicRoutes = [
   "/",
-  "/api/webhook/clerk(.*)",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/api/webhook(.*)",
   "/api/rapidapi(.*)",
   "/question/:id(.*)",
   "/tags(.*)",
@@ -15,7 +17,7 @@ const publicRoutes = [
 
 // Define routes to be completely ignored by Clerk’s middleware (with wildcard matching)
 const ignoredRoutes = [
-  "/api/webhook/clerk(.*)",
+  "/api/webhook(.*)",
   "/api/openai(.*)",
   "/api/rapidapi(.*)",
 ];
@@ -28,7 +30,7 @@ export default clerkMiddleware(async (auth, request) => {
   if (isIgnoredRoute(request)) {
     return;
   }
-  
+
   // For routes not listed as public, enforce authentication
   if (!isPublicRoute(request)) {
     await auth.protect();
