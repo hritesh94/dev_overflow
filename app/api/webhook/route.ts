@@ -5,7 +5,7 @@ import { createUser, deleteUser, updateUser } from "@/lib/actions/user.action";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const SIGNING_SECRET = process.env.NEXT_CLERK_WEBHOOK_SECRET;
+  const SIGNING_SECRET = process.env.SIGNING_SECRET;
 
   if (!SIGNING_SECRET) {
     throw new Error(
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   const wh = new Webhook(SIGNING_SECRET);
 
   // Get headers
-  const headerPayload = await headers();
+  const headerPayload =  headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
