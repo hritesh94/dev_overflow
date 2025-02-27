@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     //Create a new user in your database
     const mongoUser = await createUser({
       clerkId: id,
-      name: `${first_name} ${last_name ? `last_name` : ""}`,
+      name: `${first_name} ${last_name ? `${last_name}` : ""}`,
       email: email_addresses[0].email_address,
       picture: image_url,
       username: username!, //this ! at the end means that the username is not null
