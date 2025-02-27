@@ -5,7 +5,7 @@ import { createUser, deleteUser, updateUser } from "@/lib/actions/user.action";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const SIGNING_SECRET = process.env.SIGNING_SECRET;
+  const SIGNING_SECRET = process.env.NEXT_CLERK_WEBHOOK_SECRET;
 
   if (!SIGNING_SECRET) {
     throw new Error(
@@ -54,6 +54,7 @@ export async function POST(req: Request) {
   // For this guide, log payload to console
   const { id } = evt.data;
   const eventType = evt.type;
+  console.log({ eventType });
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log("Webhook payload:", body);
 
@@ -67,12 +68,12 @@ export async function POST(req: Request) {
       name: `${first_name} ${last_name ? `last_name` : ""}`,
       email: email_addresses[0].email_address,
       picture: image_url,
-      username: username!,//this ! at the end means that the username is not null
+      username: username!, //this ! at the end means that the username is not null
     });
 
     return NextResponse.json({ message: "OK", user: mongoUser });
   }
-  
+
   if (eventType === "user.updated") {
     const { id, email_addresses, image_url, username, first_name, last_name } =
       evt.data;
@@ -84,16 +85,15 @@ export async function POST(req: Request) {
         name: `${first_name} ${last_name ? `last_name` : ""}`,
         email: email_addresses[0].email_address,
         picture: image_url,
-        username: username!,//this ! at the end means that the username is not null
-        
+        username: username!, //this ! at the end means that the username is not null
       },
-      path:`/profile/${id}`,
+      path: `/profile/${id}`,
     });
 
     return NextResponse.json({ message: "OK", user: mongoUser });
   }
 
-  if (eventType === "user.deleted") { 
+  if (eventType === "user.deleted") {
     const { id } = evt.data;
     const deletedUser = await deleteUser({ clerkId: id! });
 
