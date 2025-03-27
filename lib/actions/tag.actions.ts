@@ -81,3 +81,22 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     throw error;
   }
 }
+
+export async function getTopPopularTags() {
+  try {
+    connectToDatabase();
+
+    //What is this aggregation doing? Answer=> It is getting the top 5 tags with the most questions
+    //why are we using aggregate only here? Answer=> We are using aggregate because we are doing a complex query that requires grouping and sorting
+    const popularTags = await Tag.aggregate([
+      { $project: { name: 1, totalQuestions: { $size: "$questions" } } },
+      { $sort: { totalQuestions: -1 } },//descending order
+      { $limit: 5 },
+    ])
+    
+    return popularTags;
+  }catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
