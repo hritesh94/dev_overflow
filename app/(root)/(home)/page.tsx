@@ -6,46 +6,16 @@ import NoResult from "@/components/shared/search/NoResult";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 import React from "react";
 
-const questions = [
-  {
-    _id: "1",
-    title: "Async/Await Function Not Handling Errors Properly",
-    tags: [
-      {
-        _id: "1",
-        name: "async",
-      },
-      { _id: "1", name: "error" },
-    ],
-    author: { _id: "1", name: "John Doe", picture: "john-doe.jpg" },
-    upvotes: 1500000,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2024-09-01T12:00:00.000Z"),
-  },
-  {
-    _id: "2",
-    title: "Next JS router",
-    tags: [
-      {
-        _id: "1",
-        name: "nextjs",
-      },
-      { _id: "2", name: "node" },
-    ],
-    author: { _id: "2", name: "John Doe", picture: "john-doe.jpg" },
-    upvotes: 10,
-    views: 100,
-    answers: [],
-    createdAt: new Date("2021-09-01T12:00:00.000Z"),
-  },
-];
 
-const Home = async () => {
-  const result = await getQuestions({});
+
+const Home = async ({searchParams}:SearchParamsProps) => {
+  const result = await getQuestions({
+    searchQuery: searchParams.q ,
+  });
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">

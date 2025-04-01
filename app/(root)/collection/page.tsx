@@ -6,15 +6,16 @@ import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 import React from "react";
 import { auth } from "@clerk/nextjs/server";
+import { SearchParamsProps } from "@/types";
 
-const Home = async () => {
+const Home = async ({ searchParams }: SearchParamsProps) => {
   const { userId } = await auth();
 
   if (!userId) {
     return null;
   }
 
-  const result = await getSavedQuestions({ clerkId: userId });
+  const result = await getSavedQuestions({ clerkId: userId, searchQuery: searchParams.q, });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>

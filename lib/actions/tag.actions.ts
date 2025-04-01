@@ -40,7 +40,17 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
-    const tags = await Tag.find({});
+    const { searchQuery } = params;
+
+    const query: FilterQuery<typeof Tag> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } }, //this means we are searching by the name irrestive of the case sensitivity
+      ];
+    }
+
+    const tags = await Tag.find(query);
 
     return { tags };
   } catch (error) {
@@ -90,12 +100,12 @@ export async function getTopPopularTags() {
     //why are we using aggregate only here? Answer=> We are using aggregate because we are doing a complex query that requires grouping and sorting
     const popularTags = await Tag.aggregate([
       { $project: { name: 1, totalQuestions: { $size: "$questions" } } },
-      { $sort: { totalQuestions: -1 } },//descending order
+      { $sort: { totalQuestions: -1 } }, //descending order
       { $limit: 5 },
-    ])
-    
+    ]);
+
     return popularTags;
-  }catch (error) {
+  } catch (error) {
     console.log(error);
     throw error;
   }

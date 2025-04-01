@@ -93,8 +93,20 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDatabase();
+    const { searchQuery } = params;
+    const query: FilterQuery<typeof User> = {};
+
+    if (searchQuery) {
+      // query.$or//what does this do explain with an example ? answer-> this is used to combine multiple conditions in a query, allowing you to search for users based on different fields. For example, if you want to find users whose name or email contains a specific string, you can use $or to specify both conditions.
+    
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+
     // const { page = 1, pageSize = 20, filter, searchQuery } = params;
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const users = await User.find(query).sort({ createdAt: -1 });
 
     return { users };
   } catch (error) {
@@ -138,12 +150,21 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     connectToDatabase();
-    const { clerkId, page = 1, pageSize = 10, filter, searchQuery } = params;
-    const query: FilterQuery<typeof Question> = searchQuery
-      ? {
-          title: { $regex: new RegExp(searchQuery, "i") },
-        }
-      : {};
+    const { clerkId,  searchQuery } = params;
+    // const query: FilterQuery<typeof Question> = searchQuery
+    //   ? { //it also searches for title and content in the question model but using AND operator
+    //     title: { $regex: new RegExp(searchQuery, "i") },
+    //     content: { $regex: new RegExp(searchQuery, "i") } ,
+    //     }
+    //   : {};
+
+    const query: FilterQuery<typeof Question> = {};
+    if (searchQuery) {//this whole thing means we are searching by the title or the content
+      query.$or = [//but it searches title and content in the question model using OR operator
+        { title: { $regex: new RegExp(searchQuery, "i") } },//this means we are searching by the title irrestive of the case sensitivity
+        { content: { $regex: new RegExp(searchQuery, "i") } },//this means we are searching by the content irrestive of the case sensitivity
+      ]
+    }
 
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
