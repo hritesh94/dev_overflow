@@ -2,7 +2,7 @@ import UserCard from "@/components/cards/UserCard";
 import Filter from "@/components/shared/Filter";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import NoResult from "@/components/shared/search/NoResult";
-import { UserFilters } from "@/constants/filters";
+import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.actions";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
@@ -10,7 +10,8 @@ import React from "react";
 
 const page = async ({searchParams}:SearchParamsProps) => {
   const result = await getAllTags({
-    searchQuery: searchParams.q ,
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
 
   return (
@@ -26,7 +27,7 @@ const page = async ({searchParams}:SearchParamsProps) => {
           otherClasses="flex-1"
         />
         <Filter
-          filters={UserFilters}
+          filters={TagFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>

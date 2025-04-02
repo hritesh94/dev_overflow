@@ -48,7 +48,9 @@ export async function updateUser(params: UpdateUserParams) {
     connectToDatabase();
     const { clerkId, updateData, path } = params;
     console.log("updateData", updateData);
-   const updatedUser =  await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
+    const updatedUser = await User.findOneAndUpdate({ clerkId }, updateData, {
+      new: true,
+    });
     console.log(updatedUser);
     revalidatePath(path);
   } catch (error) {
@@ -93,20 +95,37 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDatabase();
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
     const query: FilterQuery<typeof User> = {};
 
     if (searchQuery) {
       // query.$or//what does this do explain with an example ? answer-> this is used to combine multiple conditions in a query, allowing you to search for users based on different fields. For example, if you want to find users whose name or email contains a specific string, you can use $or to specify both conditions.
-    
+
       query.$or = [
         { name: { $regex: new RegExp(searchQuery, "i") } },
         { username: { $regex: new RegExp(searchQuery, "i") } },
       ];
     }
 
+    let sortOptions = {};
+
+    switch (filter) {
+      case "new_users":
+        sortOptions = { joinedAt: -1 };
+        break;
+      case "old_users":
+        sortOptions = { joinedAt: 1 };
+        break;
+      case "top_contributors":
+        sortOptions = { reputation: -1 };
+        break;
+
+      default:
+        break;
+    }
+
     // const { page = 1, pageSize = 20, filter, searchQuery } = params;
-    const users = await User.find(query).sort({ createdAt: -1 });
+    const users = await User.find(query).sort(sortOptions);
 
     return { users };
   } catch (error) {
@@ -150,7 +169,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     connectToDatabase();
-    const { clerkId,  searchQuery } = params;
+    const { clerkId, searchQuery,filter } = params;
     // const query: FilterQuery<typeof Question> = searchQuery
     //   ? { //it also searches for title and content in the question model but using AND operator
     //     title: { $regex: new RegExp(searchQuery, "i") },
@@ -158,19 +177,47 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
     //     }
     //   : {};
 
+  
+
+    let sortOptions = {};
+
+    switch (filter) {
+      case "most_recent":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "oldest":
+        sortOptions = { createdAt: 1 };
+        break;
+      case "most_voted":
+        sortOptions = { upvotes: -1 };
+        break;
+      case "most_viewed":
+        sortOptions = { views: -1 };
+        break;
+      case "most_answered":
+        sortOptions = { answers: -1 };
+        break;
+
+      default:
+        break;
+    }
+
+
     const query: FilterQuery<typeof Question> = {};
-    if (searchQuery) {//this whole thing means we are searching by the title or the content
-      query.$or = [//but it searches title and content in the question model using OR operator
-        { title: { $regex: new RegExp(searchQuery, "i") } },//this means we are searching by the title irrestive of the case sensitivity
-        { content: { $regex: new RegExp(searchQuery, "i") } },//this means we are searching by the content irrestive of the case sensitivity
-      ]
+    if (searchQuery) {
+      //this whole thing means we are searching by the title or the content
+      query.$or = [
+        //but it searches title and content in the question model using OR operator
+        { title: { $regex: new RegExp(searchQuery, "i") } }, //this means we are searching by the title irrestive of the case sensitivity
+        { content: { $regex: new RegExp(searchQuery, "i") } }, //this means we are searching by the content irrestive of the case sensitivity
+      ];
     }
 
     const user = await User.findOne({ clerkId }).populate({
       path: "saved",
       match: query,
       options: {
-        sort: { createdAt: -1 },
+        sort: sortOptions,
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -194,7 +241,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
     connectToDatabase();
     const { userId } = params;
     const user = await User.findOne({ clerkId: userId });
-    
+
     if (!user) {
       throw new Error("User not found");
     }
@@ -253,8 +300,6 @@ With .populate("fieldName", "fieldsToInclude") → you get the full object with 
     throw error;
   }
 }
-
-
 
 // export async function getAllUsers(params: GetAllUsersParams) {
 //   try {

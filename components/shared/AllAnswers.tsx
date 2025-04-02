@@ -21,7 +21,7 @@ const AllAnswers = async ({
   page,
   filter,
 }: Props) => {
-  const result = await getAnswers({ questionId });
+  const result = await getAnswers({ questionId,page:page? +page:1,sortBy: filter });
 
   return (
     <div className="mt-11">

@@ -15,14 +15,14 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
     return null;
   }
 
-  const result = await getSavedQuestions({ clerkId: userId, searchQuery: searchParams.q, });
+  const result = await getSavedQuestions({ clerkId: userId, searchQuery: searchParams.q,filter:searchParams.filter });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
-          route="/"
+          route="/collection"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for questions"
@@ -31,7 +31,7 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
         <Filter
           filters={QuestionFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
-          containerClasses="hidden max-md:flex"
+          containerClasses=" max-md:flex"
         />
       </div>
 
