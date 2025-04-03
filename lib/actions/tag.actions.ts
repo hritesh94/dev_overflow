@@ -40,7 +40,8 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDatabase();
-    const { searchQuery,filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Tag> = {};
 
@@ -49,7 +50,7 @@ export async function getAllTags(params: GetAllTagsParams) {
         { name: { $regex: new RegExp(searchQuery, "i") } }, //this means we are searching by the name irrestive of the case sensitivity
       ];
     }
-    
+
     let sortOptions = {};
 
     switch (filter) {
@@ -62,15 +63,20 @@ export async function getAllTags(params: GetAllTagsParams) {
       case "name":
         sortOptions = { name: 1 };
         break;
-        case "old":
-          sortOptions = { createdOn: 1 };
-          break;
+      case "old":
+        sortOptions = { createdOn: 1 };
+        break;
       default:
         break;
     }
-    const tags = await Tag.find(query).sort(sortOptions);
+    const totalTags = await Tag.countDocuments(query);
+    const tags = await Tag.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
+    const isNext = totalTags > skipAmount + tags.length;
 
-    return { tags };
+    return { tags, isNext };
   } catch (error) {
     console.log(error);
     throw error;
@@ -81,7 +87,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
   try {
     connectToDatabase();
     const { tagId, page = 1, pageSize = 10, searchQuery } = params;
-
+const skipAmount = (page - 1) * pageSize;
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
     const tag = await Tag.findOne(tagFilter).populate({
@@ -92,6 +98,8 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
         : {},
       options: {
         sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize,// +1 to check if there is a next page
       },
       populate: [
         { path: "tags", model: Tag, select: "_id name" },
@@ -102,8 +110,12 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
     if (!tag) {
       throw new Error("User not found");
     }
+
+    const isNext = tag.questions.length > pageSize; //check if there is a next page
+
+
     const questions = tag.questions;
-    return { tagTitle: tag.name, questions };
+    return { tagTitle: tag.name, questions,isNext };
   } catch (error) {
     console.log(error);
     throw error;
