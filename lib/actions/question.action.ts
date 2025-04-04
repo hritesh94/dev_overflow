@@ -103,10 +103,23 @@ export async function createQuestion(params: CreateQuestionParams) {
     });
 
     //Create an interaction record for the user's ask_question
+    await Interaction.create({
+      user: author,
+      action: "ask_question",
+      question: question._id,
+      tags: tagDocuments,
+    });
+
     //Increment author's reputation by +5 points for creating a question
+    await User.findByIdAndUpdate(author, {
+      $inc: { reputation: 5 },
+    });
 
     revalidatePath(path);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
 
 export async function getQuestionById(params: GetQuestionByIdParams) {
@@ -150,7 +163,14 @@ export async function upVoteQuestion(params: QuestionVoteParams) {
     });
 
     if (!question) throw new Error("Question not found");
-    //Increment author's reputation by +10 points for upvoting a question
+    //Increment author's reputation by +1/-1 points for upvoting/revoking a question
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -1 : 1 },
+    });
+    //Increment author's reputation by +10/-10 points for receiving an upvote/downvote for a question
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
@@ -179,7 +199,14 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
     });
 
     if (!question) throw new Error("Question not found");
-    //Increment author's reputation by +10 points for upvoting a question
+     //Increment author's reputation by +1/-1 points for upvoting/revoking a question
+     await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasdownVoted ? -2 : 2 },
+    });
+    //Increment author's reputation by +10/-10 points for receiving an upvote/downvote for a question
+    await User.findByIdAndUpdate(question.author, {
+      $inc: { reputation: hasdownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
