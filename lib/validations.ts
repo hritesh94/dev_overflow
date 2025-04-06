@@ -16,4 +16,4 @@ export const ProfileSchema = z.object({
   bio: z.string().min(10).max(500),
   portfolioWebsite: z.string(),
   location: z.string().min(3).max(50),
-})
+});
