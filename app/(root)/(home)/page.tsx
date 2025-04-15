@@ -12,6 +12,13 @@ import Link from "next/link";
 import React from "react";
 import Loading from "./loading";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home | Dev Overflow",
+  description: "Dev Overflow - A community driven platform for asking and answering programming questions. With a focus on web development, data science, and more, connect with like-minded individuals and share your knowledge.",
+};
+
 const Home = async ({ searchParams }: SearchParamsProps) => {
   const result = await getQuestions({
     searchQuery: searchParams.q,

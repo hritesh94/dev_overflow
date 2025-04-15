@@ -21,7 +21,7 @@ export async function getQuestions(params: GetQuestionsParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery, filter, page = 1, pageSize = 2 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
 
     //Calculate the number of posts to skip based on the page number and page size
     const skipAmount = (page - 1) * pageSize;
@@ -199,8 +199,8 @@ export async function downVoteQuestion(params: QuestionVoteParams) {
     });
 
     if (!question) throw new Error("Question not found");
-     //Increment author's reputation by +1/-1 points for upvoting/revoking a question
-     await User.findByIdAndUpdate(userId, {
+    //Increment author's reputation by +1/-1 points for upvoting/revoking a question
+    await User.findByIdAndUpdate(userId, {
       $inc: { reputation: hasdownVoted ? -2 : 2 },
     });
     //Increment author's reputation by +10/-10 points for receiving an upvote/downvote for a question
