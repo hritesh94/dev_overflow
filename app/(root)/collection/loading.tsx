@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 
-const loading = () => {
+const Loading = () => {
   return (
     <section>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
@@ -21,4 +21,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default Loading;

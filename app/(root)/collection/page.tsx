@@ -4,10 +4,11 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import NoResult from "@/components/shared/search/NoResult";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
-import React from "react";
+import React, { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
+import Loading from "./loading";
 
 const Home = async ({ searchParams }: SearchParamsProps) => {
   const { userId } = await auth();
@@ -23,7 +24,7 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
     page: searchParams.page ? +searchParams.page : 1,
   });
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
@@ -73,7 +74,7 @@ const Home = async ({ searchParams }: SearchParamsProps) => {
           isNext={result.isNext}
         />
       </div>
-    </>
+    </Suspense>
   );
 };
 

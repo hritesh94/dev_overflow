@@ -9,6 +9,7 @@ import Link from "next/link";
 import Loading from "./loading";
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Community | Dev Overflow",
@@ -25,7 +26,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
 
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <h1 className="h1-bold text-dark100_light900">All Users</h1>
 
       <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
@@ -59,7 +60,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
           isNext={result.isNext}
         />
       </div>
-    </>
+    </Suspense>
   );
 };
 

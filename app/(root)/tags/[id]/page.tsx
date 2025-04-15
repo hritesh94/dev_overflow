@@ -5,7 +5,8 @@ import NoResult from "@/components/shared/search/NoResult";
 import { IQuestion } from "@/database/question.model";
 import { getQuestionsByTagId } from "@/lib/actions/tag.actions";
 import { URLProps } from "@/types";
-import React from "react";
+import React, { Suspense } from "react";
+import Loading from "./loading";
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const result = await getQuestionsByTagId({
@@ -16,7 +17,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
 
 
   return (
-    <>
+    <Suspense fallback={<Loading/>}>
       <h1 className="h1-bold text-dark100_light900">{result.tagTitle}</h1>
 
       <div className="mt-11 w-full">
@@ -62,7 +63,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
   isNext={result.isNext}
 />
 </div>
-    </>
+    </Suspense>
   );
 };
 
