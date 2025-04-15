@@ -4,7 +4,7 @@
 
 ## 🌐 Demo
 
-Here is a working live demo: https://nextjs14-devoverflow.vercel.app/
+Here is a working live demo: [https://nextjs14-devoverflow.vercel.app/](https://dev-overflow-np86zlyd2-hritesh94s-projects.vercel.app)
 
 ## 📝 Description
 
@@ -97,10 +97,10 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 
 ## ✅ To-do
 
-- [ ] Enable users to save jobs to their favorites list.
+- [✅] Enable users to save jobs to their favorites list.
 - [x] Allow users to apply to a job directly from the app.
-- [ ] Provide a simple and intuitive user interface for easy navigation.
-- [ ] Allow users to filter jobs based on job title, location, or company.
+- [✅] Provide a simple and intuitive user interface for easy navigation.
+- [✅] Allow users to filter jobs based on job title, location, or company.
 
 ## Project Page Screenshoots
 
@@ -118,12 +118,9 @@ If you'd like to request a new function, feel free to do so by opening an issue 
 <p align="center">
     <img width="49%" src="https://res.cloudinary.com/dgur3iyy9/image/upload/v1699372455/mobv3d37yy7sdodibdrq.jpg" alt="All users"/>
 &nbsp;
-    <img width="49%" src="https://res.cloudinary.com/dgur3iyy9/image/upload/v1699372464/ayw6yt2o7yvhmw5n9kiw.jpg" alt="Tags page"/>
+    
 </p> 
     
-<p align="center">
-    <img width="49%" src="https://res.cloudinary.com/dgur3iyy9/image/upload/v1699372463/o8qxhzajihbihiwdowe4.jpg" alt="profile"/>
-&nbsp;
-</p>
+
     
 </details>
