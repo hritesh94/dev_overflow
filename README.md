@@ -4,7 +4,7 @@
 
 ## 🌐 Demo
 
-Here is a working live demo: [https://nextjs14-devoverflow.vercel.app/](https://dev-overflow-np86zlyd2-hritesh94s-projects.vercel.app)
+Here is a working live demo: https://dev-overflow-hritesh94s-projects.vercel.app/
 
 ## 📝 Description
 
