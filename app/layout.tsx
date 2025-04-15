@@ -6,6 +6,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 import "./globals.css";
+import "../styles/prism.css";
 import { ThemeProvider } from "@/context/ThemeProvider";
 
 const inter = Inter({
@@ -22,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "DevFlow",
   description:
-    "A community driven platform for asking and answering programming questions",
+    "A community driven platform for asking and answering programming questions.Get help from experienced developers and share your knowledge with others. Explore a wide range of topics, from web development to data science, and connect with like-minded individuals.#Explore, #Learn, #Connect",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
